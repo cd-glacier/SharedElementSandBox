@@ -1,0 +1,8 @@
+-SharedTransitionLayout {
++SharedTransitionScopeProvider {
+     ...
+     NavHost(
+         navController = navController,
+         startDestination = GridView,
+     ) {...}
+ }

@@ -1,0 +1,20 @@
+ @Composable
+ fun GridViewScreen(
+     sharedTransitionScope: SharedTransitionScope,
++    animatedVisibilityScope: AnimatedVisibilityScope,
+     ...
+ ) {
+     with(sharedTransitionScope) {
+         LazyVerticalGrid(...) {
+             items(photos.size) { index ->
+                 AsyncImage(
+                    ...
+                     modifier = Modifier
+                         .sharedElement(
+                             state = rememberSharedContentState(photos[index].iPassAnimatedVisibilityScopeToGridView.kt.diffd),
++                            animatedVisibilityScope = animatedVisibilityScope,
+                         )
+                         .clickable { onClickPhoto(photos[index]) }
+                         .aspectRatio(1f),
+                 )
+                 ...

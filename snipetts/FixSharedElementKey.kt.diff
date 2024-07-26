@@ -1,0 +1,12 @@
+ @Composable
+ fun DetailViewScreen(photo: Photo) {
+     Box(...) {
+         AsyncImage(
+            ...
+             modifier = Modifier
+-                .easySharedElement(key = photo.id)
++                .easySharedElement(key = photo)
+                 .fillMaxWidth()
+         )
+     }
+ }

@@ -1,0 +1,18 @@
+ @Composable
+ fun DetailViewScreen(
++    sharedTransitionScope: SharedTransitionScope,
++    animatedVisibilityScope: AnimatedVisibilityScope,
+     ...
+ ) {
+     with(sharedTransitionScope) {
+         Box(...) {
+             AsyncImage(
+                 ...
+                 modifier = Modifier
++                    .sharedElement(
++                        state = rememberSharedContentState(photo.id),
++                        animatedVisibilityScope = animatedVisibilityScope,
++                    )
+                     .fillMaxWidth()
+             )
+             ...

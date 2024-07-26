@@ -1,0 +1,16 @@
+ @Composable
+ fun Parent(
++    sharedTransitionScope: SharedTransitionScope,
++    animatedVisibilityScope: AnimatedVisibilityScope,
+     ...
+ ) {
+    Child(
++       sharedTransitionScope: SharedTransitionScope,
++       animatedVisibilityScope: AnimatedVisibilityScope,
+    ) {
+        GrandChild(
++           sharedTransitionScope: SharedTransitionScope,
++           animatedVisibilityScope: AnimatedVisibilityScope,
+        ) {...}
+    }
+ }

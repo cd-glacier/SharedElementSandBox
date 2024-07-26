@@ -1,0 +1,15 @@
+ NavHost(...) {
+     composable<GridView> {
+         GridViewScreen(
+             sharedTransitionScope = this@SharedTransitionLayout,
++            animatedVisibilityScope = this@composable,
+             ...
+     }
+     composable<DetailView>(...) { backStackEntry ->
+         val detailView = backStackEntry.toRoute<DetailView>()
+         DetailViewScreen(
+             sharedTransitionScope = this@SharedTransitionLayout,
++            animatedVisibilityScope = this@composable,
+             photo = detailView.photo,
+         )
+         ...

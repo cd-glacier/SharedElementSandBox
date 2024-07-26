@@ -1,0 +1,16 @@
++SharedTransitionLayout {
+    ...
+     NavHost(...) {
+         composable<GridView> {
+             GridViewScreen(
++                sharedTransitionScope = this@SharedTransitionLayout,
+                 photos = photos,
+                 ...
+
+         composable<DetailView>(...) { backStackEntry ->
+             ...
+             DetailViewScreen(
++                sharedTransitionScope = this@SharedTransitionLayout,
+                 photo = detailView.photo,
+             )
+            ...

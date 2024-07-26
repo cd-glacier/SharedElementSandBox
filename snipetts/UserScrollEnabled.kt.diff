@@ -1,0 +1,4 @@
+ HorizontalPager(
+     state = rememberPagerState(initialPage = initialPage) { photos.size },
++    userScrollEnabled = !LocalSharedTransitionScope.current.isTransitionActive,
+ ) { ... }

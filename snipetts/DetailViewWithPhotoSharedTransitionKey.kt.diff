@@ -1,0 +1,14 @@
+ @Composable
+ fun DetailView(...) {
+     AsyncImage(
+         ...
+         modifier = Modifier
+             .easySharedElement(
++                PhotoSharedTransitionKey(
++                    photo = photo,
++                    isTransitionEnabled = true,
++                ),
+             )
+             .fillMaxWidth()
+     )
+ }

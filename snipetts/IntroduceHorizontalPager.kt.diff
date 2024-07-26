@@ -1,0 +1,16 @@
+ @Composable
+ fun DetailViewScreen(
+-    photo: Photo,
++    initialPage: Int,
++    photos: List<Photo>,
+ ) {
++    HorizontalPager(
++        state = rememberPagerState(initialPage = initialPage) { photos.size }
++    ) { page ->
++        photos[page].let { photo ->
+             Box(...) {
+                 AsyncImage(...)
+             }
+         }
++    }
+ }

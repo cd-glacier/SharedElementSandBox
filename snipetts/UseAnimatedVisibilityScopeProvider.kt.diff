@@ -1,0 +1,10 @@
+ composable<GridView> {
+     AnimatedVisibilityScopeProvider(animatedVisibilityScope = this) {
+         GridViewScreen(...)
+     }
+ }
+ composable<DetailView>(...) { backStackEntry ->
+     AnimatedVisibilityScopeProvider(animatedVisibilityScope = this) {
+         DetailViewScreen(...)
+     }
+ }

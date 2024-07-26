@@ -1,0 +1,11 @@
+ items(photos.size) { index ->
+     AsyncImage(
+         photos[index].thumbnail.toString(),
+         contentDescription = null,
+         contentScale = ContentScale.Crop,
+         modifier = Modifier
++            .shared...
+             .clickable { onClickPhoto(photos[index]) }
+             .aspectRatio(1f),
+     )
+ }

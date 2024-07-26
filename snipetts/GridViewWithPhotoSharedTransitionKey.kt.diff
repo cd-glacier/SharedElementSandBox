@@ -1,0 +1,15 @@
+ @Composable
+ fun GridView(...) {
+     LazyVerticalGrid(...) {
+         items(photos.size) { page ->
+             AsyncImage(
+                 photos[page].thumbnail.toString(),
+                 modifier = Modifier
+                     .easySharedElement(
++                        PhotoSharedTransitionKey(
++                            photo = photos[page],
++                            isTransitionEnabled = page == pagerState.settledPage || !isOpenedDetailPage,
++                        ),
+                     )
+             )
+             ...

@@ -1,0 +1,7 @@
+ Modifier
+-    .sharedElement(
+-        state = rememberSharedContentState(photo.id),
++    .sharedBounds(
++        sharedContentState = rememberSharedContentState(photo.id),
+         animatedVisibilityScope = animatedVisibilityScope,
+     )
