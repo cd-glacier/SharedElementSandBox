@@ -36,9 +36,9 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import cdglacier.sharedelementsandbox.ui.compositionlocal.AnimatedVisibilityScopeProvider
-import cdglacier.sharedelementsandbox.ui.compositionlocal.LocalSharedTransitionScope
-import cdglacier.sharedelementsandbox.ui.compositionlocal.easySharedElement
+import cdglacier.sharedelementsandbox.ui.sharedtransition.AnimatedVisibilityScopeProvider
+import cdglacier.sharedelementsandbox.ui.sharedtransition.LocalSharedTransitionScope
+import cdglacier.sharedelementsandbox.ui.sharedtransition.easySharedElement
 import cdglacier.sharedelementsandbox.unsplash.Photo
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -95,6 +95,7 @@ fun TransparentBackgroundViewScreen(
         enter = fadeIn(),
         exit = fadeOut(),
     ) {
+        // navigation-composeを使っていないのでAnimatedVisibilityを使ってAnimatedVisibilityScopeを取得
         AnimatedVisibilityScopeProvider(this) {
             DetailView(
                 pagerState = pagerState,
@@ -120,6 +121,7 @@ private fun GridView(
     ) {
         items(photos.size) { page ->
             AnimatedVisibility(
+                // settlePageを使っているのは、currentPageだとPagerのページ切り替え中に値が変化してしまうから
                 visible = !isOpenedDetailPage || page != pagerState.settledPage,
                 enter = fadeIn(),
                 exit = fadeOut(),
@@ -133,6 +135,7 @@ private fun GridView(
                             .easySharedElement(
                                 PhotoSharedTransitionKey(
                                     photo = photos[page],
+                                    // HorizontalPagerのページ切り替え中にアニメーションが起こるのを防いでいる
                                     isTransitionEnabled = (page == pagerState.settledPage && !pagerState.isScrollInProgress) || !isOpenedDetailPage,
                                 ),
                             )
@@ -256,6 +259,8 @@ private fun DetailView(
                                     photo = photo,
                                     isTransitionEnabled = true,
                                 ),
+                                // 他にもShared Elementの対象が存在している場合、遷移アニメーション中でも一番上に表示されないことがある
+                                // そんな時はzIndexをいじれるようになっています
                                 zIndexOverlay = if (pagerState.settledPage == page) 1f else 0f,
                             )
                             .fillMaxWidth()

@@ -25,8 +25,8 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import cdglacier.sharedelementsandbox.ui.compositionlocal.LocalSharedTransitionScope
-import cdglacier.sharedelementsandbox.ui.compositionlocal.easySharedElement
+import cdglacier.sharedelementsandbox.ui.sharedtransition.LocalSharedTransitionScope
+import cdglacier.sharedelementsandbox.ui.sharedtransition.easySharedElement
 import cdglacier.sharedelementsandbox.unsplash.Photo
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -49,7 +49,7 @@ fun DetailViewScreen(
     lazyGridState: LazyGridState,
     initialPage: Int,
     photos: List<Photo>,
-    popBackStack: () -> Unit,
+    dismiss: () -> Unit,
 ) {
     val dismissOffsetY = 100.dp
 
@@ -57,11 +57,14 @@ fun DetailViewScreen(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(pagerState.currentPage) {
+        // PagerでGridViewで表示している領域外にまで行ってしまうとShared Element Transitionが起こらないので位置を同期している
         lazyGridState.scrollToItem(pagerState.currentPage)
     }
 
     HorizontalPager(
         state = pagerState,
+        // 遷移中はHorizontalPagerを動かせないようにする.
+        // そこまで待ちたくないよって場合は、Modifier.sharedElementのboundsTransformをいじって遷移アニメーションのスピードをあげてあげるほうが良い気がします
         userScrollEnabled = !LocalSharedTransitionScope.current.isTransitionActive,
     ) { page ->
         var detectedSwipeDirection by remember { mutableStateOf<SwipeDirection?>(null) }
@@ -94,6 +97,7 @@ fun DetailViewScreen(
 
                                 when (detectedSwipeDirection) {
                                     SwipeDirection.VERTICAL -> {
+                                        // サイズを少し小さくしながら移動させる
                                         scope.launch {
                                             listOf(
                                                 async { offsetX.snapTo(offsetX.value + dragAmountX) },
@@ -104,6 +108,7 @@ fun DetailViewScreen(
                                     }
 
                                     SwipeDirection.HORIZONTAL -> {
+                                        // Pagerが動くように
                                         change.consume()
                                     }
 
@@ -113,8 +118,10 @@ fun DetailViewScreen(
                             onDragEnd = {
                                 detectedSwipeDirection = null
                                 if (offsetY.value.toDp() > dismissOffsetY) {
-                                    popBackStack()
+                                    // 閾値を超えるとdismissする
+                                    dismiss()
                                 } else {
+                                    // 閾値を超えなかった場合、元の位置に戻す
                                     scope.launch {
                                         listOf(
                                             async { offsetX.animateTo(0f) },
@@ -130,6 +137,8 @@ fun DetailViewScreen(
                 AsyncImage(
                     ImageRequest.Builder(LocalContext.current)
                         .data(photo.original.toString())
+                        // original画像のキャッシュがない時、Placeholderが遷移アニメーションをしてしまう
+                        // それを防ぐためにキャッシュがない時は、サムネイル画像を表示している
                         .placeholderMemoryCacheKey(photo.thumbnail.toString())
                         .build(),
                     contentDescription = null,

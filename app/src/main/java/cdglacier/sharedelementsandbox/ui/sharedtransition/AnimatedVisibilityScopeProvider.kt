@@ -1,4 +1,4 @@
-package cdglacier.sharedelementsandbox.ui.compositionlocal
+package cdglacier.sharedelementsandbox.ui.sharedtransition
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable

@@ -18,14 +18,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import cdglacier.sharedelementsandbox.ui.compositionlocal.AnimatedVisibilityScopeProvider
-import cdglacier.sharedelementsandbox.ui.compositionlocal.SharedTransitionScopeProvider
 import cdglacier.sharedelementsandbox.ui.screen.detailview.DetailView
 import cdglacier.sharedelementsandbox.ui.screen.detailview.DetailViewScreen
 import cdglacier.sharedelementsandbox.ui.screen.gridview.GridView
 import cdglacier.sharedelementsandbox.ui.screen.gridview.GridViewScreen
 import cdglacier.sharedelementsandbox.ui.screen.transparentbackground.TransparentBackgroundView
 import cdglacier.sharedelementsandbox.ui.screen.transparentbackground.TransparentBackgroundViewScreen
+import cdglacier.sharedelementsandbox.ui.sharedtransition.AnimatedVisibilityScopeProvider
+import cdglacier.sharedelementsandbox.ui.sharedtransition.SharedTransitionScopeProvider
 import cdglacier.sharedelementsandbox.ui.theme.SharedElementSandboxTheme
 import cdglacier.sharedelementsandbox.unsplash.Photo
 import cdglacier.sharedelementsandbox.unsplash.PhotoNavType
@@ -42,6 +42,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SharedElementSandboxTheme {
+
+                // navigation-composeを使ったSharedElementTransitionをしたい場合は、NavHostより上でSharedTransitionLayoutを呼び出す
+                // つまりここより↑にComposableを書くとそのComposableはSharedTransition中でも上に表示されるよ
                 SharedTransitionScopeProvider {
                     val navController = rememberNavController()
                     val lazyGridState = rememberLazyGridState()
@@ -77,6 +80,7 @@ class MainActivity : ComponentActivity() {
                             TransparentBackgroundViewScreen(photos = photos)
                         }
                         composable<GridView> {
+                            // NavGraphBuilder.composableがAnimatedVisibilityScopeを提供してくれる
                             AnimatedVisibilityScopeProvider(
                                 animatedVisibilityScope = this,
                             ) {
@@ -84,11 +88,7 @@ class MainActivity : ComponentActivity() {
                                     lazyGridState = lazyGridState,
                                     photos = photos,
                                     onClickPhoto = { photo ->
-                                        navController.navigate(
-                                            DetailView(
-                                                photo
-                                            )
-                                        )
+                                        navController.navigate(DetailView(photo))
                                     }
                                 )
                             }
@@ -98,6 +98,7 @@ class MainActivity : ComponentActivity() {
                                 typeOf<Photo>() to PhotoNavType
                             ),
                         ) { backStackEntry ->
+                            // NavGraphBuilder.composableがAnimatedVisibilityScopeを提供してくれる
                             AnimatedVisibilityScopeProvider(
                                 animatedVisibilityScope = this
                             ) {
@@ -106,7 +107,7 @@ class MainActivity : ComponentActivity() {
                                     lazyGridState = lazyGridState,
                                     initialPage = detailView.page,
                                     photos = photos,
-                                    popBackStack = navController::popBackStack,
+                                    dismiss = navController::popBackStack,
                                 )
                             }
                         }

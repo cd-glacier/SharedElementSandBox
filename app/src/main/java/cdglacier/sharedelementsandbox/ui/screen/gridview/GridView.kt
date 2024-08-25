@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import cdglacier.sharedelementsandbox.ui.compositionlocal.easySharedElement
+import cdglacier.sharedelementsandbox.ui.sharedtransition.easySharedElement
 import cdglacier.sharedelementsandbox.unsplash.Photo
 import coil.compose.AsyncImage
 import kotlinx.serialization.Serializable
